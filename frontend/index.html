@@ -21,151 +21,239 @@
 </head>
 <body>
   <div id="app">
-    <header>
+    <header class="main-header">
       <nav class="nav-bar">
         <div class="logo">
           <span class="icon">🧠</span>
           <h1>StrokeGuard AI</h1>
         </div>
+        <ul class="nav-links">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#analysis">Analysis</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#guide">How to Use</a></li>
+        </ul>
         <div class="auth-actions">
           <button id="install-btn" class="install-btn hidden">
-            <span class="btn-icon">📲</span> Install App
+            <span class="btn-icon">📲</span> Install
           </button>
-          <button id="auth-btn" class="ghost-btn">Login / Sign Up</button>
+          <button id="auth-btn" class="ghost-btn">Login</button>
           <div id="user-profile" class="hidden">
             <span id="username-display">User</span>
             <button id="logout-btn" class="logout-icon">Logout</button>
           </div>
         </div>
       </nav>
-      <p class="subtitle">Early Warning System for Stroke Risk Prevention</p>
     </header>
 
-    <main class="container">
-      <section class="form-card">
-        <form id="risk-form">
-          <div class="form-grid">
-            <!-- Personal Info -->
-            <div class="input-group">
-              <label for="gender">Gender</label>
-              <select id="gender" name="gender" required>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
+    <section id="hero" class="hero-section">
+      <div class="hero-content">
+        <h2 class="hero-title">Early Detection Saves Lives.</h2>
+        <p class="hero-subtitle">Harness the power of AI to understand your stroke risk in seconds. Clinical-grade analysis at your fingertips.</p>
+        <div class="hero-cta">
+          <a href="#analysis" class="primary-btn">Start Free Assessment</a>
+          <a href="#about" class="secondary-btn">Learn More</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="pulse-circle"></div>
+        <div class="brain-mesh">🧠</div>
+      </div>
+    </section>
+
+      <section id="analysis" class="content-section">
+        <div class="section-header">
+          <h2>Risk Assessment</h2>
+          <p>Please provide accurate information for the best clinical prediction.</p>
+        </div>
+        <div class="form-card">
+          <form id="risk-form">
+            <div class="form-grid">
+              <!-- Personal Info -->
+              <div class="input-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" min="1" max="120" placeholder="e.g. 45" required />
+              </div>
+
+              <!-- Health Factors -->
+              <div class="input-group">
+                <label for="hypertension">Hypertension</label>
+                <select id="hypertension" name="hypertension" required>
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="heart_disease">Heart Disease</label>
+                <select id="heart_disease" name="heart_disease" required>
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="avg_glucose_level">Avg. Glucose Level (mg/dL)</label>
+                <input type="number" step="0.01" id="avg_glucose_level" name="avg_glucose_level" placeholder="e.g. 105.92" required />
+              </div>
+
+              <div class="input-group">
+                <label for="bmi">Body Mass Index (BMI)</label>
+                <input type="number" step="0.1" id="bmi" name="bmi" placeholder="e.g. 28.5" required />
+              </div>
+
+              <!-- Lifestyle -->
+              <div class="input-group">
+                <label for="smoking_status">Smoking Status</label>
+                <select id="smoking_status" name="smoking_status" required>
+                  <option value="never smoked">Never Smoked</option>
+                  <option value="formerly smoked">Formerly Smoked</option>
+                  <option value="smokes">Regularly Smokes</option>
+                  <option value="Unknown">Unknown</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="ever_married">Ever Married?</label>
+                <select id="ever_married" name="ever_married" required>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="work_type">Work Type</label>
+                <select id="work_type" name="work_type" required>
+                  <option value="Private">Private Sector</option>
+                  <option value="Self-employed">Self-employed</option>
+                  <option value="Govt_job">Government Job</option>
+                  <option value="children">Student / Child</option>
+                  <option value="Never_worked">Never Worked</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="Residence_type">Residence Type</label>
+                <select id="Residence_type" name="Residence_type" required>
+                  <option value="Urban">Urban</option>
+                  <option value="Rural">Rural</option>
+                </select>
+              </div>
             </div>
 
-            <div class="input-group">
-              <label for="age">Age</label>
-              <input type="number" id="age" name="age" min="1" max="120" placeholder="e.g. 45" required />
-            </div>
-
-            <!-- Health Factors -->
-            <div class="input-group">
-              <label for="hypertension">Hypertension</label>
-              <select id="hypertension" name="hypertension" required>
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-              </select>
-            </div>
-
-            <div class="input-group">
-              <label for="heart_disease">Heart Disease</label>
-              <select id="heart_disease" name="heart_disease" required>
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-              </select>
-            </div>
-
-            <div class="input-group">
-              <label for="avg_glucose_level">Avg. Glucose Level (mg/dL)</label>
-              <input type="number" step="0.01" id="avg_glucose_level" name="avg_glucose_level" placeholder="e.g. 105.92" required />
-            </div>
-
-            <div class="input-group">
-              <label for="bmi">Body Mass Index (BMI)</label>
-              <input type="number" step="0.1" id="bmi" name="bmi" placeholder="e.g. 28.5" required />
-            </div>
-
-            <!-- Lifestyle -->
-            <div class="input-group">
-              <label for="smoking_status">Smoking Status</label>
-              <select id="smoking_status" name="smoking_status" required>
-                <option value="never smoked">Never Smoked</option>
-                <option value="formerly smoked">Formerly Smoked</option>
-                <option value="smokes">Regularly Smokes</option>
-                <option value="Unknown">Unknown</option>
-              </select>
-            </div>
-
-            <div class="input-group">
-              <label for="ever_married">Ever Married?</label>
-              <select id="ever_married" name="ever_married" required>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            <div class="input-group">
-              <label for="work_type">Work Type</label>
-              <select id="work_type" name="work_type" required>
-                <option value="Private">Private Sector</option>
-                <option value="Self-employed">Self-employed</option>
-                <option value="Govt_job">Government Job</option>
-                <option value="children">Student / Child</option>
-                <option value="Never_worked">Never Worked</option>
-              </select>
-            </div>
-
-            <div class="input-group">
-              <label for="Residence_type">Residence Type</label>
-              <select id="Residence_type" name="Residence_type" required>
-                <option value="Urban">Urban</option>
-                <option value="Rural">Rural</option>
-              </select>
-            </div>
-          </div>
-
-          <button type="submit" id="submit-btn" class="primary-btn">
-            Analyze Stroke Risk
-            <span class="btn-shine"></span>
-          </button>
-        </form>
+            <button type="submit" id="submit-btn" class="primary-btn">
+              Analyze Stroke Risk
+              <span class="btn-shine"></span>
+            </button>
+          </form>
+        </div>
       </section>
 
       <section id="result-container" class="result-card hidden">
-        <div class="result-header">
-          <h2>Analysis Results</h2>
+        <div class="report-watermark">CONFIDENTIAL MEDICAL REPORT</div>
+        
+        <div class="report-header">
+          <div class="doctor-profile">
+            <span class="doc-icon">👨‍⚕️</span>
+            <div>
+              <h3>StrokeGuard AI Report</h3>
+              <p id="report-date">Date: May 8, 2026</p>
+            </div>
+          </div>
           <div id="risk-badge" class="badge">Low Risk</div>
         </div>
 
-        <div class="gauge-wrapper">
-          <div class="risk-gauge">
-            <div id="gauge-fill" class="gauge-fill"></div>
-            <div class="gauge-text">
-              <span id="risk-percentage">0%</span>
-              <span class="label">Probability</span>
+        <div class="report-grid">
+          <div class="report-main">
+            <div class="gauge-wrapper">
+              <div class="risk-gauge">
+                <div id="gauge-fill" class="gauge-fill"></div>
+                <div class="gauge-text">
+                  <span id="risk-percentage">0%</span>
+                  <span class="label">Probability</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="advice-section">
+              <h3>Diagnosis Summary</h3>
+              <div id="risk-advice" class="advice-card">
+                <!-- Advice populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <div class="report-side">
+            <div class="explanation-section">
+              <h3>Clinical Risk Drivers</h3>
+              <p class="small-text">Factors contributing most to your score:</p>
+              <ul id="explanation-list" class="driver-list">
+                <!-- Drivers populated by JS -->
+              </ul>
             </div>
           </div>
         </div>
 
-        <div class="advice-section">
-          <h3>Health Recommendation</h3>
-          <div id="risk-advice" class="advice-card">
-            <!-- Advice populated by JS -->
+        <div class="survival-guide-section">
+          <h3>🛡️ Path to Prevention & Survival</h3>
+          <div id="survival-content" class="survival-grid">
+            <!-- Populated by JS -->
           </div>
         </div>
 
-        <div class="explanation-section">
-          <h3>Key Risk Drivers</h3>
-          <ul id="explanation-list" class="driver-list">
-            <!-- Drivers populated by JS -->
-          </ul>
+        <div class="report-footer">
+          <p>⚠️ <strong>Disclaimer:</strong> This report is generated by an AI model and should not replace professional medical consultation. If you feel unwell, seek immediate help.</p>
+          <button id="reset-btn" class="secondary-btn">Generate New Report</button>
         </div>
-
-        <button id="reset-btn" class="secondary-btn">New Analysis</button>
       </section>
-    </main>
+
+      <section id="about" class="content-section">
+        <div class="about-grid">
+          <div class="about-text">
+            <h2>About StrokeGuard AI</h2>
+            <p>StrokeGuard is a cutting-edge health platform dedicated to reducing the global burden of stroke. By combining state-of-the-art machine learning with clinical data, we provide users with early warning signs and actionable health insights.</p>
+            <div class="stat-row">
+              <div class="stat"><span>95%</span><p>Accuracy</p></div>
+              <div class="stat"><span>2s</span><p>Processing</p></div>
+              <div class="stat"><span>∞</span><p>Free Access</p></div>
+            </div>
+          </div>
+          <div class="about-card">
+            <h3>How It Works</h3>
+            <p>Our model analyzes multiple variables including hypertension, heart disease, and lifestyle factors using the SHAP interpretability framework to explain exactly why your risk is at its current level.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="guide" class="content-section">
+        <h2 class="text-center">How to Use</h2>
+        <div class="guide-steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <h4>Input Data</h4>
+            <p>Fill in the health assessment form with your latest medical metrics.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <h4>AI Analysis</h4>
+            <p>Our engine processes your data through clinical-grade ML models.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <h4>Review Report</h4>
+            <p>Get a detailed Doctor's Report with risk drivers and prevention tips.</p>
+          </div>
+        </div>
+      </section>
 
     <div id="loading-overlay" class="loading-overlay hidden">
       <div class="spinner"></div>

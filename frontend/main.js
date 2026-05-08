@@ -163,12 +163,6 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-resetBtn.addEventListener('click', () => {
-  resultContainer.classList.add('hidden');
-  formCard.classList.remove('hidden');
-  form.reset();
-});
-
 function showLoading(show) {
   if (show) {
     loadingOverlay.classList.remove('hidden');
@@ -178,8 +172,13 @@ function showLoading(show) {
 }
 
 function displayResults(data) {
-  formCard.classList.add('hidden');
+  const analysisSection = document.getElementById('analysis');
+  analysisSection.classList.add('hidden');
   resultContainer.classList.remove('hidden');
+
+  // Update Report Date
+  const reportDate = document.getElementById('report-date');
+  reportDate.textContent = `Date: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
 
   const prob = data.risk_probability * 100;
   const level = data.risk_level;
@@ -220,7 +219,52 @@ function displayResults(data) {
     `;
     explanationList.appendChild(li);
   });
+
+  // Generate Survival Guide
+  generateSurvivalGuide(level);
+
+  // Scroll to report
+  resultContainer.scrollIntoView({ behavior: 'smooth' });
 }
+
+function generateSurvivalGuide(level) {
+  const survivalContent = document.getElementById('survival-content');
+  survivalContent.innerHTML = '';
+
+  const commonTips = [
+    { icon: '🥦', title: 'Healthy Diet', text: 'Reduce salt and saturated fats. Increase fruits and vegetables.' },
+    { icon: '🏃', title: 'Regular Exercise', text: 'Aim for 30 mins of moderate activity most days.' },
+    { icon: '🚭', title: 'Quit Smoking', text: 'Smoking significantly increases vascular risks.' }
+  ];
+
+  const highRiskTips = [
+    { icon: '🚨', title: 'Immediate Medical Consultation', text: 'Consult a cardiologist immediately for a full assessment.', warning: true },
+    { icon: '💊', title: 'Medication Adherence', text: 'If prescribed, never skip blood pressure or cholesterol medication.', warning: true },
+    { icon: '📊', title: 'Monitor BP Daily', text: 'Keep a daily log of your blood pressure readings.', warning: true }
+  ];
+
+  const tips = level === 'High' ? [...highRiskTips, ...commonTips] : commonTips;
+
+  tips.forEach(tip => {
+    const card = document.createElement('div');
+    card.className = `survival-card ${tip.warning ? 'warning' : ''}`;
+    card.innerHTML = `
+      <span class="icon">${tip.icon}</span>
+      <div>
+        <h4>${tip.title}</h4>
+        <p class="small-text" style="margin: 0">${tip.text}</p>
+      </div>
+    `;
+    survivalContent.appendChild(card);
+  });
+}
+
+resetBtn.addEventListener('click', () => {
+  resultContainer.classList.add('hidden');
+  document.getElementById('analysis').classList.remove('hidden');
+  form.reset();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
 function animateValue(obj, start, end, duration) {
   let startTimestamp = null;
@@ -235,3 +279,16 @@ function animateValue(obj, start, end, duration) {
   };
   window.requestAnimationFrame(step);
 }
+
+// Smooth Scroll for Nav Links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth'
+      });
+    }
+  });
+});
