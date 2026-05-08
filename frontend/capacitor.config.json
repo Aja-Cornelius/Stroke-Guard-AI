@@ -1,0 +1,6 @@
+{
+  "appId": "com.strokeguard.ai",
+  "appName": "StrokeGuard",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
