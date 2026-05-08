@@ -41,7 +41,7 @@ window.addEventListener('offline', () => {
   console.log('App is offline');
 });
 
-const API_URL = 'http://localhost:8000';
+const API_URL = 'https://stroke-guard-ai-1uhq.onrender.com';
 
 const form = document.getElementById('risk-form');
 const resultContainer = document.getElementById('result-container');
