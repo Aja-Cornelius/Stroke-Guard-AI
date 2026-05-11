@@ -1,9 +1,27 @@
-// Admin Dashboard Logic
 document.addEventListener('DOMContentLoaded', () => {
   initCharts();
   updateDate();
   loadStats();
+  initMobileMenu();
 });
+
+function initMobileMenu() {
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  
+  if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+  }
+
+  // Close sidebar on navigation
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+    });
+  });
+}
 
 function updateDate() {
   const dateElement = document.getElementById('current-date');
