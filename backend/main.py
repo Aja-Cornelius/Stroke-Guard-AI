@@ -19,6 +19,13 @@ app.add_middleware(
 MODEL_PATH = "models/stroke_model.pkl"
 model = None
 
+# Stats tracking (In-memory for demo)
+stats = {
+    "total_predictions": 1284,
+    "high_risk_count": 342,
+    "accuracy": 0.942
+}
+
 # Attempt to load model if joblib is available
 try:
     import joblib
@@ -80,6 +87,10 @@ ADVICE_MAP = {
     "Moderate": "You have a moderate risk factors. We recommend scheduling a routine check-up with your doctor to discuss preventive heart health measures.",
     "High": "URGENT: Your risk level is high. Please consult a healthcare professional immediately for a full cardiovascular assessment."
 }
+
+@app.get("/stats")
+def get_stats():
+    return stats
 
 @app.get("/")
 def read_root():
@@ -161,6 +172,11 @@ async def predict(data: StrokeInput):
         explanation.append({"feature": "Smoking + Contraceptives", "contribution": 0.35})
     if data.gender == "Male" and data.erectile_dysfunction == "Yes":
         explanation.append({"feature": "Vascular Indicator (ED)", "contribution": 0.15})
+
+    # Update Stats
+    stats["total_predictions"] += 1
+    if risk_level == "High":
+        stats["high_risk_count"] += 1
 
     return {
         "risk_probability": float(base_prob),

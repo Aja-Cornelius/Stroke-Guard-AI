@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StrokeGuard Admin | Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="icon">🧠</span>
+        <h2>StrokeGuard Admin</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#overview" class="nav-item active">Dashboard Overview</a>
+        <a href="#analytics" class="nav-item">Risk Analytics</a>
+        <a href="#users" class="nav-item">User Management</a>
+        <a href="#model" class="nav-item">AI Model Status</a>
+        <a href="#settings" class="nav-item">System Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="logout-admin" class="ghost-btn">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="content-header">
+        <h1>Global Health Intelligence</h1>
+        <div class="header-actions">
+          <span class="status-indicator online">System Live</span>
+          <div class="date-display" id="current-date">May 11, 2026</div>
+        </div>
+      </header>
+
+      <div class="dashboard-grid">
+        <!-- Stat Cards -->
+        <div class="stat-card">
+          <div class="stat-icon purple">👥</div>
+          <div class="stat-info">
+            <span class="label">Total Assessments</span>
+            <h3 id="total-assessments">1,284</h3>
+            <span class="trend up">+12% this week</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red">⚠️</div>
+          <div class="stat-info">
+            <span class="label">High Risk Detections</span>
+            <h3 id="high-risk-count">342</h3>
+            <span class="trend down">-2% this week</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">⚡</div>
+          <div class="stat-info">
+            <span class="label">AI Accuracy</span>
+            <h3 id="model-accuracy">94.2%</h3>
+            <span class="trend">Stable</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">🌍</div>
+          <div class="stat-info">
+            <span class="label">Active Regions</span>
+            <h3>Nigeria</h3>
+            <span class="trend">Lagos, Abuja, Kano</span>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="chart-container large">
+          <h3>Risk Level Distribution (Monthly)</h3>
+          <canvas id="riskTrendChart"></canvas>
+        </div>
+
+        <div class="chart-container small">
+          <h3>Gender Distribution</h3>
+          <canvas id="genderChart"></canvas>
+        </div>
+
+        <!-- Recent Activity Table -->
+        <div class="table-container full-width">
+          <div class="table-header">
+            <h3>Recent High-Risk Cases</h3>
+            <button class="primary-btn sm">Export CSV</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Patient ID</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Risk Prob.</th>
+                <th>Primary Driver</th>
+                <th>Action Taken</th>
+              </tr>
+            </thead>
+            <tbody id="activity-table-body">
+              <tr>
+                <td>#SG-8921</td>
+                <td>Female</td>
+                <td>64</td>
+                <td><span class="risk-pill high">89%</span></td>
+                <td>Hypertension + TIA</td>
+                <td>Advice Generated</td>
+              </tr>
+              <tr>
+                <td>#SG-8919</td>
+                <td>Male</td>
+                <td>72</td>
+                <td><span class="risk-pill high">92%</span></td>
+                <td>AFib + Heart Disease</td>
+                <td>Advice Generated</td>
+              </tr>
+              <tr>
+                <td>#SG-8915</td>
+                <td>Female</td>
+                <td>58</td>
+                <td><span class="risk-pill moderate">64%</span></td>
+                <td>Preeclampsia Hx</td>
+                <td>Advice Generated</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>
