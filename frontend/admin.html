@@ -18,11 +18,11 @@
         <h2>StrokeGuard Admin</h2>
       </div>
       <nav class="sidebar-nav">
-        <a href="#overview" class="nav-item active">Dashboard Overview</a>
-        <a href="#analytics" class="nav-item">Risk Analytics</a>
-        <a href="#users" class="nav-item">User Management</a>
-        <a href="#model" class="nav-item">AI Model Status</a>
-        <a href="#settings" class="nav-item">System Settings</a>
+        <a href="#overview" class="nav-item active" data-section="overview">Dashboard Overview</a>
+        <a href="#analytics" class="nav-item" data-section="analytics">Risk Analytics</a>
+        <a href="#users" class="nav-item" data-section="users">User Management</a>
+        <a href="#model" class="nav-item" data-section="model">AI Model Status</a>
+        <a href="#settings" class="nav-item" data-section="settings">System Settings</a>
       </nav>
       <div class="sidebar-footer">
         <button id="logout-admin" class="ghost-btn">Logout</button>
@@ -46,96 +46,178 @@
         </div>
       </header>
 
-      <div class="dashboard-grid">
-        <!-- Stat Cards -->
-        <div class="stat-card">
-          <div class="stat-icon purple">👥</div>
-          <div class="stat-info">
-            <span class="label">Total Assessments</span>
-            <h3 id="total-assessments">1,284</h3>
-            <span class="trend up">+12% this week</span>
+      <div id="overview-section" class="dashboard-section">
+        <div class="dashboard-grid">
+          <!-- Stat Cards -->
+          <div class="stat-card">
+            <div class="stat-icon purple">👥</div>
+            <div class="stat-info">
+              <span class="label">Total Assessments</span>
+              <h3 id="total-assessments">1,284</h3>
+              <span class="trend up">+12% this week</span>
+            </div>
           </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon red">⚠️</div>
-          <div class="stat-info">
-            <span class="label">High Risk Detections</span>
-            <h3 id="high-risk-count">342</h3>
-            <span class="trend down">-2% this week</span>
+          <div class="stat-card">
+            <div class="stat-icon red">⚠️</div>
+            <div class="stat-info">
+              <span class="label">High Risk Detections</span>
+              <h3 id="high-risk-count">342</h3>
+              <span class="trend down">-2% this week</span>
+            </div>
           </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon blue">⚡</div>
-          <div class="stat-info">
-            <span class="label">AI Accuracy</span>
-            <h3 id="model-accuracy">94.2%</h3>
-            <span class="trend">Stable</span>
+          <div class="stat-card">
+            <div class="stat-icon blue">⚡</div>
+            <div class="stat-info">
+              <span class="label">AI Accuracy</span>
+              <h3 id="model-accuracy">94.2%</h3>
+              <span class="trend">Stable</span>
+            </div>
           </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon green">🌍</div>
-          <div class="stat-info">
-            <span class="label">Active Regions</span>
-            <h3>Nigeria</h3>
-            <span class="trend">Lagos, Abuja, Kano</span>
+          <div class="stat-card">
+            <div class="stat-icon green">🌍</div>
+            <div class="stat-info">
+              <span class="label">Active Regions</span>
+              <h3>Nigeria</h3>
+              <span class="trend">Lagos, Abuja, Kano</span>
+            </div>
           </div>
-        </div>
 
-        <!-- Charts Row -->
-        <div class="chart-container large">
-          <h3>Risk Level Distribution (Monthly)</h3>
-          <canvas id="riskTrendChart"></canvas>
-        </div>
+          <!-- Charts Row -->
+          <div class="chart-container large">
+            <h3>Risk Level Distribution (Monthly)</h3>
+            <canvas id="riskTrendChart"></canvas>
+          </div>
 
-        <div class="chart-container small">
-          <h3>Gender Distribution</h3>
-          <canvas id="genderChart"></canvas>
-        </div>
+          <div class="chart-container small">
+            <h3>Gender Distribution</h3>
+            <canvas id="genderChart"></canvas>
+          </div>
 
-        <!-- Recent Activity Table -->
+          <!-- Recent Activity Table -->
+          <div class="table-container full-width">
+            <div class="table-header">
+              <h3>Recent High-Risk Cases</h3>
+              <button class="primary-btn sm">Export CSV</button>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Patient ID</th>
+                  <th>Gender</th>
+                  <th>Age</th>
+                  <th>Risk Prob.</th>
+                  <th>Primary Driver</th>
+                  <th>Action Taken</th>
+                </tr>
+              </thead>
+              <tbody id="activity-table-body">
+                <tr>
+                  <td>#SG-8921</td>
+                  <td>Female</td>
+                  <td>64</td>
+                  <td><span class="risk-pill high">89%</span></td>
+                  <td>Hypertension + TIA</td>
+                  <td>Advice Generated</td>
+                </tr>
+                <tr>
+                  <td>#SG-8919</td>
+                  <td>Male</td>
+                  <td>72</td>
+                  <td><span class="risk-pill high">92%</span></td>
+                  <td>AFib + Heart Disease</td>
+                  <td>Advice Generated</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Analytics Section -->
+      <div id="analytics-section" class="dashboard-section hidden">
+        <div class="dashboard-grid">
+          <div class="chart-container large">
+            <h3>Prevalence of Risk Factors</h3>
+            <canvas id="factorPrevalenceChart"></canvas>
+          </div>
+          <div class="chart-container small">
+            <h3>Top Clinical Drivers</h3>
+            <ul class="driver-ranking">
+              <li><span>1. Hypertension</span><span class="val">68%</span></li>
+              <li><span>2. Smoking</span><span class="val">42%</span></li>
+              <li><span>3. Diabetes</span><span class="val">35%</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Management Section -->
+      <div id="users-section" class="dashboard-section hidden">
         <div class="table-container full-width">
           <div class="table-header">
-            <h3>Recent High-Risk Cases</h3>
-            <button class="primary-btn sm">Export CSV</button>
+            <h3>User Assessment Logs</h3>
+            <input type="text" placeholder="Search Patient ID..." class="search-input">
           </div>
           <table>
             <thead>
               <tr>
-                <th>Patient ID</th>
+                <th>ID</th>
+                <th>Join Date</th>
                 <th>Gender</th>
-                <th>Age</th>
-                <th>Risk Prob.</th>
-                <th>Primary Driver</th>
-                <th>Action Taken</th>
+                <th>Assessments</th>
+                <th>Avg. Risk</th>
+                <th>Status</th>
               </tr>
             </thead>
-            <tbody id="activity-table-body">
+            <tbody>
               <tr>
-                <td>#SG-8921</td>
+                <td>#USR-001</td>
+                <td>May 10</td>
                 <td>Female</td>
-                <td>64</td>
-                <td><span class="risk-pill high">89%</span></td>
-                <td>Hypertension + TIA</td>
-                <td>Advice Generated</td>
-              </tr>
-              <tr>
-                <td>#SG-8919</td>
-                <td>Male</td>
-                <td>72</td>
-                <td><span class="risk-pill high">92%</span></td>
-                <td>AFib + Heart Disease</td>
-                <td>Advice Generated</td>
-              </tr>
-              <tr>
-                <td>#SG-8915</td>
-                <td>Female</td>
-                <td>58</td>
-                <td><span class="risk-pill moderate">64%</span></td>
-                <td>Preeclampsia Hx</td>
-                <td>Advice Generated</td>
+                <td>3</td>
+                <td>Low</td>
+                <td><span class="status-indicator online">Active</span></td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- AI Model Status Section -->
+      <div id="model-section" class="dashboard-section hidden">
+        <div class="dashboard-grid">
+          <div class="stat-card">
+            <div class="stat-info">
+              <span class="label">Model Version</span>
+              <h3>v2.4.1 (Clinical-Weighted)</h3>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <span class="label">Last Retrained</span>
+              <h3>May 5, 2026</h3>
+            </div>
+          </div>
+          <div class="chart-container large">
+            <h3>Model Drift Monitoring</h3>
+            <canvas id="driftChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Settings Section -->
+      <div id="settings-section" class="dashboard-section hidden">
+        <div class="settings-card">
+          <h3>API Configuration</h3>
+          <div class="input-group">
+            <label>Backend URL</label>
+            <input type="text" value="https://stroke-guard-ai-1uhq.onrender.com" class="admin-input">
+          </div>
+          <div class="input-group">
+            <label>Alert Threshold (%)</label>
+            <input type="number" value="70" class="admin-input">
+          </div>
+          <button class="primary-btn">Save Changes</button>
         </div>
       </div>
     </main>

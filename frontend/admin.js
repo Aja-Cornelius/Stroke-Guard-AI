@@ -107,7 +107,66 @@ async function loadStats() {
 // Navigation Logic
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', (e) => {
+    e.preventDefault();
+    const sectionId = e.currentTarget.getAttribute('data-section');
+    
+    // Update Sidebar
     document.querySelector('.nav-item.active').classList.remove('active');
     e.currentTarget.classList.add('active');
+    
+    // Update Sections
+    document.querySelectorAll('.dashboard-section').forEach(sec => {
+      sec.classList.add('hidden');
+    });
+    document.getElementById(`${sectionId}-section`).classList.remove('hidden');
+    
+    if (window.innerWidth < 900) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+
+    // Lazy load specific charts
+    if (sectionId === 'analytics') initAnalyticsCharts();
+    if (sectionId === 'model') initModelCharts();
   });
 });
+
+function initAnalyticsCharts() {
+  const ctx = document.getElementById('factorPrevalenceChart').getContext('2d');
+  if (window.factorChart) window.factorChart.destroy();
+  window.factorChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Hypertension', 'Smoking', 'Diabetes', 'BMI > 30', 'Heart Disease'],
+      datasets: [{
+        label: '% of Users',
+        data: [68, 42, 35, 55, 22],
+        backgroundColor: 'rgba(99, 102, 241, 0.6)'
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#94a3b8' } } }
+    }
+  });
+}
+
+function initModelCharts() {
+  const ctx = document.getElementById('driftChart').getContext('2d');
+  if (window.driftChart) window.driftChart.destroy();
+  window.driftChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['May 1', 'May 2', 'May 3', 'May 4', 'May 5'],
+      datasets: [{
+        label: 'Model Accuracy',
+        data: [0.945, 0.942, 0.944, 0.941, 0.942],
+        borderColor: '#22c55e',
+        tension: 0.1
+      }]
+    },
+    options: {
+      scales: { y: { min: 0.9, ticks: { color: '#94a3b8' } }, x: { ticks: { color: '#94a3b8' } } }
+    }
+  });
+}
