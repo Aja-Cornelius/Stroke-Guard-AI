@@ -125,18 +125,72 @@ function updateAuthUI() {
   }
 }
 
+// UI Elements
+const genderSelector = document.querySelector('.gender-selector');
+const formContainer = document.getElementById('form-container');
+const maleSpecific = document.getElementById('male-specific');
+const femaleSpecific = document.getElementById('female-specific');
+const pregnancyOptions = document.getElementById('pregnancy-options');
+const maleStress = document.getElementById('male-stress');
+const backToGenderBtn = document.getElementById('back-to-gender');
+const genderInput = document.getElementById('gender');
+
+// Gender Selection Logic
+document.getElementById('select-male').addEventListener('click', () => {
+  setGender('Male');
+});
+
+document.getElementById('select-female').addEventListener('click', () => {
+  setGender('Female');
+});
+
+function setGender(gender) {
+  genderInput.value = gender;
+  genderSelector.classList.add('hidden');
+  formContainer.classList.remove('hidden');
+  
+  if (gender === 'Male') {
+    maleSpecific.classList.remove('hidden');
+    femaleSpecific.classList.add('hidden');
+    maleStress.classList.remove('hidden');
+  } else {
+    femaleSpecific.classList.remove('hidden');
+    maleSpecific.classList.add('hidden');
+    maleStress.classList.add('hidden');
+  }
+}
+
+backToGenderBtn.addEventListener('click', () => {
+  formContainer.classList.add('hidden');
+  genderSelector.classList.remove('hidden');
+});
+
+// Pregnancy Sub-menu Logic
+document.getElementById('is_pregnant').addEventListener('change', (e) => {
+  if (e.target.value === 'Yes') {
+    pregnancyOptions.classList.remove('hidden');
+  } else {
+    pregnancyOptions.classList.add('hidden');
+  }
+});
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   
   const formData = new FormData(form);
   const data = Object.fromEntries(formData.entries());
   
-  // Convert numeric fields
-  data.age = parseFloat(data.age);
-  data.avg_glucose_level = parseFloat(data.avg_glucose_level);
-  data.bmi = parseFloat(data.bmi);
-  data.hypertension = parseInt(data.hypertension);
-  data.heart_disease = parseInt(data.heart_disease);
+  // Type conversion and calculations
+  const numFields = ['age', 'weight', 'height', 'waist', 'systolic', 'diastolic', 'avg_glucose_level', 'total_cholesterol', 'sleep_hours', 'physical_activity', 'sodium_intake', 'hip_circumference', 'weeks_postpartum'];
+  
+  numFields.forEach(field => {
+    if (data[field]) data[field] = parseFloat(data[field]);
+    else data[field] = 0;
+  });
+
+  // Calculate BMI
+  const heightMeters = data.height / 100;
+  data.bmi = data.weight / (heightMeters * heightMeters);
 
   showLoading(true);
 

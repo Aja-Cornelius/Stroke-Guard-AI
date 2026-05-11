@@ -33,14 +33,47 @@ except ImportError:
 class StrokeInput(BaseModel):
     gender: str
     age: float
-    hypertension: int
-    heart_disease: int
-    ever_married: str
-    work_type: str
-    Residence_type: str
+    weight: float
+    height: float
+    waist: float
+    systolic: float
+    diastolic: float
     avg_glucose_level: float
-    bmi: float
+    total_cholesterol: float
+    
+    # Female Specific
+    is_pregnant: str = "No"
+    weeks_postpartum: float = 0
+    preeclampsia: str = "No"
+    gestational_diabetes: str = "No"
+    contraceptives: str = "No"
+    hrt: str = "No"
+    menopause_status: str = "Pre-menopausal"
+    migraine_aura: str = "No"
+    
+    # Male Specific
+    erectile_dysfunction: str = "No"
+    low_testosterone: str = "No"
+    adt: str = "No"
+    contact_sports: str = "No"
+    hip_circumference: float = 0
+    occupational_stress: str = "No"
+    
+    # General History
+    hypertension_diag: str
+    diabetes_diag: str
+    afib: str
+    tia: str
+    family_history: str
+    osa: str
     smoking_status: str
+    secondhand_smoke: str = "No"
+    heavy_alcohol: str
+    khat: str = "No"
+    sleep_hours: float
+    physical_activity: float
+    sodium_intake: float
+    bmi: float
 
 ADVICE_MAP = {
     "Low": "Your risk level is low. Continue maintaining a healthy lifestyle, regular exercise, and a balanced diet to keep it this way.",
@@ -54,95 +87,87 @@ def read_root():
 
 @app.post("/predict")
 async def predict(data: StrokeInput):
-    # Dynamic imports for heavy libraries
-    try:
-        import pandas as pd
-        import numpy as np
-    except ImportError:
-        # Emergency fallback for missing dependencies
-        prob = random.uniform(0.1, 0.9)
-        if data.age > 70: prob = 0.85 # Deterministic high risk for testing
+    # --- CLINICAL HEURISTIC LOGIC ---
+    red_flags = 0
+    medium_flags = 0
+    slow_burners = 0
+    
+    # 1. Red Flags (Immediate High Risk)
+    if data.afib == "Yes": red_flags += 1
+    if data.tia == "Yes": red_flags += 1
+    if data.systolic > 160 or data.diastolic > 100: red_flags += 1
+    
+    # Female Red Flags
+    if data.gender == "Female":
+        if data.is_pregnant == "Yes" and (data.systolic > 140 or data.diastolic > 90): red_flags += 1
+        if data.preeclampsia == "Yes": red_flags += 1
+        if data.smoking_status == "smokes" and data.contraceptives == "Yes": red_flags += 1
         
-        risk_level = "High" if prob > 0.6 else ("Moderate" if prob > 0.3 else "Low")
-        return {
-            "risk_probability": prob,
-            "risk_level": risk_level,
-            "explanation": [{"feature": "Age", "contribution": 0.45, "impact": "Significant"}],
-            "note": "AI Engine dependencies still installing. Showing mock data."
-        }
+    # Male Red Flags
+    if data.gender == "Male":
+        if data.erectile_dysfunction == "Yes" and data.hypertension_diag == "Yes": red_flags += 1
 
-    # Convert input to DataFrame
-    input_df = pd.DataFrame([data.dict()])
+    # 2. Medium Risk (Accumulators)
+    if data.diabetes_diag == "Yes" or data.avg_glucose_level > 125: medium_flags += 1
+    if data.heavy_alcohol == "Yes": medium_flags += 1
+    if data.smoking_status == "smokes": medium_flags += 1
+    if data.family_history == "Yes": medium_flags += 1
     
-    if model is None:
-        # Mock logic using numpy/pandas if model is missing but libs are present
-        prob = np.random.uniform(0.1, 0.9)
-        risk_level = "High" if prob > 0.6 else ("Moderate" if prob > 0.3 else "Low")
+    # Female Medium
+    if data.gender == "Female":
+        if data.migraine_aura == "Yes": medium_flags += 1
+        if 0 < data.weeks_postpartum <= 12: medium_flags += 1
+        if data.gestational_diabetes == "Yes": medium_flags += 1
         
-        explanation = [
-            {"feature": "age", "contribution": 0.15},
-            {"feature": "hypertension", "contribution": 0.10},
-            {"feature": "avg_glucose_level", "contribution": -0.05}
-        ]
-        
-        return {
-            "risk_probability": float(prob),
-            "risk_level": risk_level,
-            "advice": ADVICE_MAP.get(risk_level, ""),
-            "explanation": explanation,
-            "is_mock": True
-        }
+    # Male Medium
+    if data.gender == "Male":
+        if data.erectile_dysfunction == "Yes": medium_flags += 1
+        if data.osa == "Yes": medium_flags += 1
+        if data.adt == "Yes": medium_flags += 1
+        if data.low_testosterone == "Yes": medium_flags += 1
+
+    # 3. Slow Burners
+    if data.age > 55: slow_burners += 1
+    if data.bmi > 30: slow_burners += 1
+    if data.sleep_hours < 6: slow_burners += 1
+    if data.sodium_intake > 5: slow_burners += 1
+    if data.gender == "Male" and data.occupational_stress == "Yes": slow_burners += 1
+
+    # Final Probability Calculation (Heuristic)
+    base_prob = 0.1
+    if red_flags > 0:
+        base_prob = 0.85 + (red_flags * 0.05)
+    elif medium_flags >= 3:
+        base_prob = 0.65 + (medium_flags * 0.02)
+    elif medium_flags >= 1:
+        base_prob = 0.35 + (medium_flags * 0.05)
     
-    # Get prediction probability using real model
-    prob = model.predict_proba(input_df)[0][1]
-    
-    # Classification
+    # Add slow burner weight
+    base_prob += slow_burners * 0.03
+    base_prob = min(base_prob, 0.99)
+
     risk_level = "Low"
-    if prob > 0.6:
+    if base_prob > 0.7:
         risk_level = "High"
-    elif prob > 0.3:
+    elif base_prob > 0.4:
         risk_level = "Moderate"
-        
-    # SHAP Explanation
-    try:
-        import shap
-        classifier = model.named_steps['classifier']
-        preprocessor = model.named_steps['preprocessor']
-        
-        X_transformed = preprocessor.transform(input_df)
-        
-        # Get feature names
-        ohe_features = preprocessor.named_transformers_['cat'].named_steps['onehot'].get_feature_names_out()
-        feature_names = ['age', 'avg_glucose_level', 'bmi'] + list(ohe_features)
-        
-        explainer = shap.TreeExplainer(classifier)
-        shap_values = explainer.shap_values(X_transformed)
-        
-        if isinstance(shap_values, list):
-            shap_v = shap_values[1][0]
-        else:
-            shap_v = shap_values[0]
-            
-        explanation = []
-        for name, val in zip(feature_names, shap_v):
-            explanation.append({"feature": name, "contribution": float(val)})
-            
-        explanation = sorted(explanation, key=lambda x: abs(x['contribution']), reverse=True)
-        return {
-            "risk_probability": float(prob),
-            "risk_level": risk_level,
-            "advice": ADVICE_MAP.get(risk_level, ""),
-            "explanation": explanation[:5]
-        }
-    except Exception as e:
-        print(f"SHAP Error: {e}")
-        return {
-            "risk_probability": float(prob),
-            "risk_level": risk_level,
-            "advice": ADVICE_MAP.get(risk_level, ""),
-            "explanation": [{"feature": "Model Output", "contribution": float(prob)}],
-            "note": "SHAP library error or not installed."
-        }
+
+    # Explanations based on flags
+    explanation = []
+    if data.afib == "Yes": explanation.append({"feature": "Atrial Fibrillation", "contribution": 0.3})
+    if data.tia == "Yes": explanation.append({"feature": "Previous Mini-Stroke", "contribution": 0.4})
+    if data.systolic > 160: explanation.append({"feature": "Stage 2 Hypertension", "contribution": 0.25})
+    if data.gender == "Female" and data.smoking_status == "smokes" and data.contraceptives == "Yes":
+        explanation.append({"feature": "Smoking + Contraceptives", "contribution": 0.35})
+    if data.gender == "Male" and data.erectile_dysfunction == "Yes":
+        explanation.append({"feature": "Vascular Indicator (ED)", "contribution": 0.15})
+
+    return {
+        "risk_probability": float(base_prob),
+        "risk_level": risk_level,
+        "advice": ADVICE_MAP.get(risk_level, ""),
+        "explanation": explanation[:5] if explanation else [{"feature": "Combined Lifestyle Factors", "contribution": 0.1}]
+    }
 
 if __name__ == "__main__":
     import uvicorn

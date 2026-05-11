@@ -850,3 +850,95 @@ header {
     grid-template-columns: 1fr;
   }
 }
+
+/* Gender Selector */
+.gender-selector {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin: 3rem 0;
+}
+
+.gender-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--glass-border);
+  padding: 2.5rem 3.5rem;
+  border-radius: 24px;
+  color: var(--text-main);
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  min-width: 280px;
+}
+
+.gender-btn .icon {
+  font-size: 3rem;
+  transition: transform 0.4s;
+}
+
+.gender-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--primary);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.gender-btn:hover .icon {
+  transform: scale(1.2);
+}
+
+.form-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.form-group-section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.form-group-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.form-group-section h3::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--primary), transparent);
+  opacity: 0.3;
+}
+
+.form-actions {
+  display: flex;
+  gap: 2rem;
+  margin-top: 4rem;
+  justify-content: center;
+}
+
+.contents {
+  display: contents;
+}
+
+@media (max-width: 768px) {
+  .gender-selector {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .gender-btn {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
