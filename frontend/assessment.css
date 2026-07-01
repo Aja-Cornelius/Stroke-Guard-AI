@@ -1,0 +1,207 @@
+/* Assessment Page Specific Styles */
+
+.assessment-body {
+  background: radial-gradient(circle at top left, #1e1b4b, #0f172a);
+}
+
+/* Step pills in header */
+.nav-steps {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.step-pill {
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s;
+}
+
+.step-pill.active {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  border-color: transparent;
+}
+
+/* Assessment main container */
+#assessment-app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 6rem;
+  min-height: calc(100vh - 80px);
+}
+
+/* Assessment steps */
+.assessment-step {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.active-step {
+  display: block;
+}
+
+/* Step hero text */
+.step-hero {
+  text-align: center;
+  padding: 3rem 1rem 1rem;
+}
+
+.step-hero h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(to right, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.step-subtitle {
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+/* Gender cards */
+.gender-selector {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  margin: 2rem 0 3rem;
+}
+
+.gender-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--glass-border);
+  padding: 3rem 4rem;
+  border-radius: 28px;
+  color: var(--text-main);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 220px;
+  backdrop-filter: blur(10px);
+}
+
+.gender-btn .icon {
+  font-size: 3.5rem;
+  transition: transform 0.4s;
+}
+
+.gender-label {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.gender-desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.gender-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: var(--primary);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+}
+
+.gender-btn:hover .icon {
+  transform: scale(1.15);
+}
+
+/* Form page header */
+.form-page-header {
+  text-align: center;
+  padding: 2rem 1rem 1rem;
+}
+
+.form-page-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+/* Checkbox row for height */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem !important;
+  color: var(--text-dim) !important;
+  cursor: pointer;
+  margin-top: 0.25rem;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* User badge in header */
+.user-badge {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+/* Report footer actions */
+.report-footer-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.report-footer-actions .secondary-btn {
+  flex: 1;
+  min-width: 150px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gender-selector {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .gender-btn {
+    width: 100%;
+    min-width: unset;
+    padding: 2rem;
+  }
+
+  .step-hero h2 {
+    font-size: 1.75rem;
+  }
+
+  .nav-steps {
+    display: none;
+  }
+
+  .form-page-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .report-footer-actions {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StrokeGuard | Risk Assessment</title>
+  <meta name="description" content="Complete your stroke risk assessment with StrokeGuard AI for a clinical-grade analysis.">
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#6366f1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/assessment.css">
+</head>
+<body class="assessment-body">
+
+  <!-- Header -->
+  <header class="main-header">
+    <nav class="nav-bar">
+      <div class="logo">
+        <span class="icon">🧠</span>
+        <h1>StrokeGuard AI</h1>
+      </div>
+      <div class="nav-steps" id="nav-steps">
+        <span class="step-pill active" id="step-pill-1">1. Gender</span>
+        <span class="step-pill" id="step-pill-2">2. Assessment</span>
+        <span class="step-pill" id="step-pill-3">3. Results</span>
+      </div>
+      <div class="auth-actions">
+        <span id="username-display" class="user-badge"></span>
+        <button id="logout-btn" class="ghost-btn">Logout</button>
+        <a href="/" class="ghost-btn">← Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="assessment-app">
+
+    <!-- Step 1: Gender Selection -->
+    <section id="step-gender" class="assessment-step active-step">
+      <div class="step-hero">
+        <h2>Let's Begin Your Assessment</h2>
+        <p class="step-subtitle">Select your biological sex to personalise your cardiovascular risk analysis.</p>
+      </div>
+      <div class="gender-selector">
+        <button id="select-male" class="gender-btn">
+          <span class="icon">👨</span>
+          <span class="gender-label">Male</span>
+          <span class="gender-desc">Male-specific factors included</span>
+        </button>
+        <button id="select-female" class="gender-btn">
+          <span class="icon">👩</span>
+          <span class="gender-label">Female</span>
+          <span class="gender-desc">Female-specific factors included</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Step 2: Form -->
+    <section id="step-form" class="assessment-step hidden">
+      <div class="form-page-header">
+        <h2 id="form-page-title">Clinical Risk Assessment — <span id="gender-tag"></span></h2>
+        <p class="step-subtitle">Please fill in your health metrics as accurately as possible.</p>
+      </div>
+
+      <div class="form-card">
+        <form id="risk-form">
+          <input type="hidden" id="gender" name="gender">
+
+          <div class="form-sections">
+
+            <!-- Section 1: Basic Info -->
+            <div class="form-group-section">
+              <h3>1. Basic Information</h3>
+              <div class="form-grid">
+                <div class="input-group">
+                  <label for="age">Age (Years)</label>
+                  <input type="number" id="age" name="age" min="1" max="120" placeholder="e.g. 45" required />
+                </div>
+                <div class="input-group">
+                  <label for="weight">Weight (kg)</label>
+                  <input type="number" id="weight" name="weight" step="0.1" placeholder="e.g. 75" required />
+                </div>
+                <div class="input-group">
+                  <label for="height">Height (cm)</label>
+                  <input type="number" id="height" name="height" placeholder="e.g. 175" />
+                  <label class="checkbox-row">
+                    <input type="checkbox" id="height-unknown" /> Don't know my height
+                  </label>
+                </div>
+                <div class="input-group">
+                  <label for="waist">Waist (cm)</label>
+                  <input type="number" id="waist" name="waist" placeholder="e.g. 85" required />
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Clinical Metrics -->
+            <div class="form-group-section">
+              <h3>2. Clinical Metrics</h3>
+              <div class="form-grid">
+                <div class="input-group">
+                  <label for="systolic">Systolic BP (mmHg)</label>
+                  <input type="number" id="systolic" name="systolic" placeholder="Top number (e.g. 120)" required />
+                </div>
+                <div class="input-group">
+                  <label for="diastolic">Diastolic BP (mmHg)</label>
+                  <input type="number" id="diastolic" name="diastolic" placeholder="Bottom number (e.g. 80)" required />
+                </div>
+                <div class="input-group">
+                  <label for="avg_glucose_level">Avg. Glucose (mg/dL)</label>
+                  <input type="number" step="0.01" id="avg_glucose_level" name="avg_glucose_level" placeholder="e.g. 105.9" required />
+                </div>
+                <div class="input-group">
+                  <label for="total_cholesterol">Total Cholesterol (mg/dL)</label>
+                  <input type="number" id="total_cholesterol" name="total_cholesterol" placeholder="e.g. 190" required />
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3: Female-Specific -->
+            <div id="female-specific" class="form-group-section hidden">
+              <h3>3. Female-Specific Factors</h3>
+              <div class="form-grid">
+                <div class="input-group">
+                  <label for="is_pregnant">Currently Pregnant?</label>
+                  <select id="is_pregnant" name="is_pregnant">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div id="pregnancy-options" class="hidden contents">
+                  <div class="input-group">
+                    <label for="weeks_postpartum">Weeks Postpartum (0–12)</label>
+                    <input type="number" id="weeks_postpartum" name="weeks_postpartum" min="0" max="52" value="0" />
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label for="preeclampsia">Hx. Preeclampsia?</label>
+                  <select id="preeclampsia" name="preeclampsia">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="gestational_diabetes">Hx. Gestational Diabetes?</label>
+                  <select id="gestational_diabetes" name="gestational_diabetes">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="contraceptives">Hormonal Contraceptives?</label>
+                  <select id="contraceptives" name="contraceptives">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="hrt">HRT Use?</label>
+                  <select id="hrt" name="hrt">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="menopause_status">Menopause Status</label>
+                  <select id="menopause_status" name="menopause_status">
+                    <option value="Pre-menopausal">Pre-menopausal</option>
+                    <option value="Post-menopausal">Post-menopausal</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="migraine_aura">Migraine w/ Aura?</label>
+                  <select id="migraine_aura" name="migraine_aura">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3: Male-Specific -->
+            <div id="male-specific" class="form-group-section hidden">
+              <h3>3. Male-Specific Factors</h3>
+              <div class="form-grid">
+                <div class="input-group">
+                  <label for="erectile_dysfunction">Hx. Erectile Dysfunction?</label>
+                  <select id="erectile_dysfunction" name="erectile_dysfunction">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="low_testosterone">Low Testosterone Dx?</label>
+                  <select id="low_testosterone" name="low_testosterone">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="adt">ADT (Androgen Deprivation)?</label>
+                  <select id="adt" name="adt">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="contact_sports">Contact Sports?</label>
+                  <select id="contact_sports" name="contact_sports">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="hip_circumference">Hip Circumference (cm)</label>
+                  <input type="number" id="hip_circumference" name="hip_circumference" placeholder="For W-to-H Ratio" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 4: Lifestyle & Medical History -->
+            <div class="form-group-section">
+              <h3>4. Lifestyle &amp; Medical History</h3>
+              <div class="form-grid">
+                <div class="input-group">
+                  <label for="hypertension_diag">Hypertension Dx?</label>
+                  <select id="hypertension_diag" name="hypertension_diag" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="diabetes_diag">Diabetes Dx?</label>
+                  <select id="diabetes_diag" name="diabetes_diag" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="afib">AFib (Atrial Fib.)?</label>
+                  <select id="afib" name="afib" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="tia">Hx. Mini-Stroke (TIA)?</label>
+                  <select id="tia" name="tia" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="family_history">Family Stroke Hx?</label>
+                  <select id="family_history" name="family_history" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="osa">Sleep Apnea (OSA)?</label>
+                  <select id="osa" name="osa">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="smoking_status">Smoking Status</label>
+                  <select id="smoking_status" name="smoking_status" required>
+                    <option value="never smoked">Never Smoked</option>
+                    <option value="formerly smoked">Formerly Smoked</option>
+                    <option value="smokes">Currently Smokes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="secondhand_smoke">2nd-Hand Smoke Exp.?</label>
+                  <select id="secondhand_smoke" name="secondhand_smoke">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="heavy_alcohol">Heavy Alcohol Use?</label>
+                  <select id="heavy_alcohol" name="heavy_alcohol" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="khat">Khat / Tobacco Chewing?</label>
+                  <select id="khat" name="khat">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="sleep_hours">Daily Sleep (Hrs)</label>
+                  <input type="number" id="sleep_hours" name="sleep_hours" placeholder="e.g. 7" required />
+                </div>
+                <div class="input-group">
+                  <label for="physical_activity">Weekly Activity (Mins)</label>
+                  <input type="number" id="physical_activity" name="physical_activity" placeholder="e.g. 150" required />
+                </div>
+                <div class="input-group">
+                  <label for="sodium_intake">Daily Salt Est. (g)</label>
+                  <input type="number" id="sodium_intake" name="sodium_intake" placeholder="e.g. 5" required />
+                </div>
+                <div id="male-stress" class="input-group hidden">
+                  <label for="occupational_stress">High Work Stress?</label>
+                  <select id="occupational_stress" name="occupational_stress">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div><!-- end form-sections -->
+
+          <div class="form-actions">
+            <button type="button" id="back-to-gender" class="secondary-btn">← Change Gender</button>
+            <button type="submit" id="submit-btn" class="primary-btn">
+              Generate Clinical Report
+              <span class="btn-shine"></span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Step 3: Results -->
+    <section id="step-results" class="assessment-step hidden">
+      <div class="result-card">
+        <div class="report-watermark">CONFIDENTIAL MEDICAL REPORT</div>
+
+        <div class="report-header">
+          <div class="doctor-profile">
+            <span class="doc-icon">👨‍⚕️</span>
+            <div>
+              <h3>StrokeGuard AI Report</h3>
+              <p id="report-date">Date: </p>
+            </div>
+          </div>
+          <div id="risk-badge" class="badge">Low Risk</div>
+        </div>
+
+        <div class="report-grid">
+          <div class="report-main">
+            <div class="gauge-wrapper">
+              <div class="risk-gauge">
+                <div id="gauge-fill" class="gauge-fill"></div>
+                <div class="gauge-text">
+                  <span id="risk-percentage">0%</span>
+                  <span class="label">Probability</span>
+                </div>
+              </div>
+            </div>
+            <div class="advice-section">
+              <h3>Diagnosis Summary</h3>
+              <div id="risk-advice" class="advice-card"></div>
+            </div>
+          </div>
+
+          <div class="report-side">
+            <div class="explanation-section">
+              <h3>Clinical Risk Drivers</h3>
+              <p class="small-text">Factors contributing most to your score:</p>
+              <ul id="explanation-list" class="driver-list"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="survival-guide-section">
+          <h3>🛡️ Path to Prevention &amp; Survival</h3>
+          <div id="survival-content" class="survival-grid"></div>
+        </div>
+
+        <div class="report-footer">
+          <p>⚠️ <strong>Disclaimer:</strong> This report is generated by an AI model and should not replace professional medical consultation. If you feel unwell, seek immediate help.</p>
+          <div class="report-footer-actions">
+            <button id="reset-btn" class="secondary-btn">Take New Assessment</button>
+            <a href="/" class="secondary-btn">← Back to Home</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay hidden">
+    <div class="spinner"></div>
+    <p>AI Engine Processing...</p>
+  </div>
+
+  <div id="offline-indicator" class="offline-indicator hidden">
+    <span class="icon">📡</span> You are currently offline. Some features may be limited.
+  </div>
+
+  <script type="module" src="/assessment.js"></script>
+</body>
+</html>
